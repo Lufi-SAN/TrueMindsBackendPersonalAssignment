@@ -12,7 +12,6 @@ import ordersRouter from './routes/orders.js'
 import { isDomainError } from './domain/shared.js'
 import { errorData, ErrorJSON } from './errors/errorJSONBuilder.js'
 import { errorTypesMapping, type ErrorTypesMappingProps } from './errors/error-mapping.js'
-import { fa } from 'zod/locales'
 
 const app = express();
 const v1ApiRouter = express.Router();
@@ -23,7 +22,7 @@ app.disable('x-powered-by');
         //check filesystem if db exists; if not fill it up with defaultData
         const dbPath = path.join(process.cwd(), 'src', 'db')
         if (checkDBExists(dbPath)) {//if true, that means string & db folder was just created
-            createDefaultData()
+            createDefaultData()//*
         }
         
         app.use(helmet())
@@ -33,7 +32,7 @@ app.disable('x-powered-by');
             standardHeaders: true,
             legacyHeaders: false,
             handler: (req, res, next, options) => {
-                const path = req.protocol + '://' + req.get('host') + req.originalUrl;
+                const path = req.originalUrl;
                 const errorD = errorData(...errorTypesMapping[429] as ErrorTypesMappingProps, options.message, path )
                 const errorJSON = new ErrorJSON(undefined, errorD, undefined)
                 res.status(options.statusCode).json(errorJSON.toJSON())
@@ -48,7 +47,7 @@ app.disable('x-powered-by');
         })
         
         app.use((req, res, next) => {
-            res.locals.defaultErrLinks = buildLinks();
+            res.locals.defaultErrLinks = buildLinks(req, []);
             next();
         })
         
@@ -58,20 +57,24 @@ app.disable('x-powered-by');
         app.use('v1', v1ApiRouter)
 
         app.use((req : Request, res : Response, next : NextFunction) => {
-            res.status(404).json({ error: "Not found" });
+            const code = 404
+            const path = req.originalUrl;
+            const errorD = errorData(...errorTypesMapping[code] as ErrorTypesMappingProps, "Resource could not be found on server", path )
+            const errorJSON = new ErrorJSON(undefined, errorD, res.locals.defaultErrLinks);
+            res.status(code).json(errorJSON.toJSON());
         })
 
         app.use((err : Error, req : Request, res : Response, next : NextFunction) => {
             let code = 500
-            const path = req.protocol + '://' + req.get('host') + req.originalUrl;
+            const path = req.originalUrl;
             let errorD;
 
             if(isDomainError(err)) {
                 code = err.code
                 const message = err.message
-                errorD = errorData(...errorTypesMapping[code] as ErrorTypesMappingProps, message, path )
+                errorD = errorData(...errorTypesMapping[code] as ErrorTypesMappingProps, message, path)
             } else {
-                errorD = errorData(...errorTypesMapping[500] as ErrorTypesMappingProps, 'An unexpected error occurred on the server.', path )
+                errorD = errorData(...errorTypesMapping[500] as ErrorTypesMappingProps, 'An unexpected error occurred on the server.', path)
             }
 
             const errorJSON = new ErrorJSON(undefined, errorD, res.locals.errLinks || res.locals.defaultErrLinks || {});
