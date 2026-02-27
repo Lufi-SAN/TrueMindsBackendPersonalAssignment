@@ -22,7 +22,7 @@ app.disable('x-powered-by');
         //check filesystem if db exists; if not fill it up with defaultData
         const dbPath = path.join(process.cwd(), 'src', 'db')
         if (checkDBExists(dbPath)) {//if true, that means string & db folder was just created
-            createDefaultData()//*
+            createDefaultData()
         }
         
         app.use(helmet())

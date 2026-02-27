@@ -60,7 +60,7 @@ const orderData = {
     }
 };
 
-export function createDefaultData(data: Record<string, any>, filename: string) {
+function defaultDataCreator(data: Record<string, any>, filename: string) {
     const outputPath = path.join(process.cwd(), 'src', 'db', filename)
     const jsonString = JSON.stringify(data, null, 2)
     try {
@@ -72,6 +72,8 @@ export function createDefaultData(data: Record<string, any>, filename: string) {
     }
 }
 
-createDefaultData(userData, 'users.json')
-createDefaultData(foodData, 'foods.json')
-createDefaultData(orderData, 'orders.json')
+export function createDefaultData() {
+    defaultDataCreator(userData, 'users.json')
+    defaultDataCreator(foodData, 'foods.json')
+    defaultDataCreator(orderData, 'orders.json')
+}
