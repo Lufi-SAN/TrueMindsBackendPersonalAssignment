@@ -1,0 +1,21 @@
+{
+  "f1": {
+    "id": "f1",
+    "name": "Jollof Rice",
+    "price": 3500,
+    "stock": 400,
+    "available": true
+  },
+  "f2": {
+    "id": "f2",
+    "name": "Chicken Pie",
+    "price": 1200,
+    "available": true
+  },
+  "f3": {
+    "id": "f3",
+    "name": "Chapman",
+    "price": 1500,
+    "available": false
+  }   
+}
