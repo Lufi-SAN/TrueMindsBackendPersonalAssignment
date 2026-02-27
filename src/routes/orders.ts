@@ -1,9 +1,20 @@
 import { Router } from "express"
-import { ordersRateLimit } from "../middleware/ordersRateLimit.js"
+import { getOrdersSchema, postOrdersSchema } from "./schemas/orders-schema.js"
+import { validateInput } from "../middleware/validateInput.js"
 
 const ordersRouter = Router()
 
-ordersRouter.get('/:id', validateInput(), ordersControllers.verifyIdentity, ordersControllers.fetchOrerDetails )
-ordersRouter.post('/', ordersRateLimit, validateInput(), ordersControllers.createOrder )
+const linkArray1 = {
+    1: [{ rel: 'orders', path: '/v1/orders:id', method: 'GET'}],
+    2: [{ rel: 'orders', path: '/v1/orders:id', method: 'GET'}]
+}
+
+const linkArray2 = {
+    1: [{ rel: 'orders', path: '/v1/orders', method: 'POST'}],
+    2: [{ rel: 'orders', path: '/v1/orders', method: 'POST'}]
+}
+
+ordersRouter.get('/:id', validateInput(getOrdersSchema, linkArray1, true), ordersControllers.fetchOrerDetails )
+ordersRouter.post('/', validateInput(postOrdersSchema, linkArray2), ordersControllers.createOrder )
 
 export default ordersRouter 
