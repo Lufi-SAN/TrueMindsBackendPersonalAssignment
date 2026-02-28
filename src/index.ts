@@ -86,6 +86,7 @@ app.disable('x-powered-by');
             console.log(`Server is running on port ${PORT}`)
         })
     } catch (err) {
+        console.error(err)
         process.exit(1)
     }
 })()

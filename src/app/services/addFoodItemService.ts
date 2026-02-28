@@ -1,6 +1,6 @@
 import { addFoodItemDB } from "../store/food.store.js"
 
-export async function addFoodItemService(userDetails) {
+export async function addFoodItemService(userDetails: Record<string, any>) {
     try {
         const { name, price, stock, available } = userDetails
         const result = await addFoodItemDB(name, price, stock, available)

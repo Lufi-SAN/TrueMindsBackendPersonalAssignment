@@ -9,7 +9,7 @@ export function checkUserExists(type: 'signup' | 'verify') {
             const result = await checkUserExistsService(phoneNumber, type)
             if (result) next()
         } catch(err) {
-            
+            throw err
         }
     }
 }
