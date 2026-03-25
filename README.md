@@ -1,4 +1,3 @@
-[Uploading README (1).md…]()
 # TrueMinds Backend Personal Assignment
 
 A simple Node.js + Express backend written in TypeScript that uses a
@@ -144,7 +143,3 @@ If extending this project, consider adding:
 -   Seed/reset script for JSON database
 
 ------------------------------------------------------------------------
-
-## License
-
-Add your preferred license here (MIT is common for personal projects).
